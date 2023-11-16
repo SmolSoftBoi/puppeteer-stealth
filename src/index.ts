@@ -21,42 +21,34 @@ import WindowOuterdimensionsPlugin from 'puppeteer-extra-plugin-stealth/evasions
  * @param page Page
  */
 export async function onPageCreated(page: Page): Promise<void[]> {
+    console.debug('onPageCreated is called');
+
     /** Promises */
     const promises: Promise<void>[] = [];
 
-    const chromeAppPlugin = ChromeAppPlugin();
-    const chromeCsiPlugin = ChromeCsiPlugin();
-    const chromeLoadTimesPlugin = ChromeLoadTimesPlugin();
-    const chromeRuntimePlugin = ChromeRuntimePlugin();
-    const iFrameContentWindowPlugin = IFrameContentWindowPlugin();
-    const mediaCodecsPlugin = MediaCodecsPlugin();
-    const navigatorHardwareConcurrencyPlugin = NavigatorHardwareConcurrencyPlugin();
-    const navigatorLanguagesPlugin = NavigatorLanguagesPlugin();
-    const navigatorPermissionsPlugin = NavigatorPermissionsPlugin();
-    const navigatorPluginsPlugin = NavigatorPluginsPlugin();
-    const navigatorVendorPlugin = NavigatorVendorPlugin();
-    const navigatorWebdriverPlugin = NavigatorWebdriverPlugin();
-    const sourceurlPlugin = SourceurlPlugin();
-    const userAgentOverridePlugin = UserAgentOverridePlugin();
-    const webglVendorPlugin = WebglVendorPlugin();
-    const windowOuterdimensionsPlugin = WindowOuterdimensionsPlugin();
+    const plugins = [
+        ChromeAppPlugin(),
+        ChromeCsiPlugin(),
+        ChromeLoadTimesPlugin(),
+        ChromeRuntimePlugin(),
+        IFrameContentWindowPlugin(),
+        MediaCodecsPlugin(),
+        NavigatorHardwareConcurrencyPlugin(),
+        NavigatorLanguagesPlugin(),
+        NavigatorPermissionsPlugin(),
+        NavigatorPluginsPlugin(),
+        NavigatorVendorPlugin(),
+        NavigatorWebdriverPlugin(),
+        SourceurlPlugin(),
+        UserAgentOverridePlugin(),
+        WebglVendorPlugin(),
+        WindowOuterdimensionsPlugin(),
+    ];
 
-    promises.push(chromeAppPlugin.onPageCreated(page));
-    promises.push(chromeCsiPlugin.onPageCreated(page));
-    promises.push(chromeLoadTimesPlugin.onPageCreated(page));
-    promises.push(chromeRuntimePlugin.onPageCreated(page));
-    promises.push(iFrameContentWindowPlugin.onPageCreated(page));
-    promises.push(mediaCodecsPlugin.onPageCreated(page));
-    promises.push(navigatorHardwareConcurrencyPlugin.onPageCreated(page));
-    promises.push(navigatorLanguagesPlugin.onPageCreated(page));
-    promises.push(navigatorPermissionsPlugin.onPageCreated(page));
-    promises.push(navigatorPluginsPlugin.onPageCreated(page));
-    promises.push(navigatorVendorPlugin.onPageCreated(page));
-    promises.push(navigatorWebdriverPlugin.onPageCreated(page));
-    promises.push(sourceurlPlugin.onPageCreated(page));
-    promises.push(userAgentOverridePlugin.onPageCreated(page));
-    promises.push(webglVendorPlugin.onPageCreated(page));
-    promises.push(windowOuterdimensionsPlugin.onPageCreated(page));
+    // Call onPageCreated on all plugin instances
+    for (const plugin of plugins) {
+        promises.push(plugin.onPageCreated(page));
+    }
 
     return Promise.all(promises);
 }
