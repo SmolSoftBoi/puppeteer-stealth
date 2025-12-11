@@ -37,16 +37,16 @@
 
 ### Tests for User Story 1
 
-- [ ] T010 [P] [US1] Add `tests/unit/onPageCreated.spec.ts` covering plugin hook invocation order, logging, and failure cases via mocked `Page` objects.
-- [ ] T011 [P] [US1] Add `tests/unit/beforeLaunch.spec.ts` asserting option mutations (args defaults, webdriver overrides) using fixture launch options.
-- [ ] T012 [P] [US1] Add `tests/unit/beforeConnect.spec.ts` verifying user-agent overrides and telemetry publishing with mocked browser connect options.
-- [ ] T013 [P] [US1] Add `tests/unit/safeguards.spec.ts` asserting opt-in flags remain enabled by default and that Responsible Automation disclaimer text/logging surfaces during unit execution.
+- [x] T010 [P] [US1] Add `tests/unit/onPageCreated.spec.ts` covering plugin hook invocation order, logging, and failure cases via mocked `Page` objects.
+- [x] T011 [P] [US1] Add `tests/unit/beforeLaunch.spec.ts` asserting option mutations (args defaults, webdriver overrides) using fixture launch options.
+- [x] T012 [P] [US1] Add `tests/unit/beforeConnect.spec.ts` verifying user-agent overrides and telemetry publishing with mocked browser connect options.
+- [x] T013 [P] [US1] Add `tests/unit/safeguards.spec.ts` asserting opt-in flags remain enabled by default and that Responsible Automation disclaimer text/logging surfaces during unit execution.
 
 ### Implementation for User Story 1
 
-- [ ] T014 [US1] Refactor `src/index.ts` `onPageCreated` export to accept injected plugin arrays for testing while emitting telemetry events consumed by the unit suite.
-- [ ] T015 [US1] Update `src/index.ts` `beforeLaunch`/`beforeConnect` exports to reuse shared fixtures, enforce safe defaults, and document behavior with TSDoc.
-- [ ] T016 [US1] Expand maintainer instructions in `docs/testing.md` and the `README.md` Testing section to explain running unit suites, interpreting failures, and confirming disclosure messaging.
+- [x] T014 [US1] Refactor `src/index.ts` `onPageCreated` export to accept injected plugin arrays for testing while emitting telemetry events consumed by the unit suite.
+- [x] T015 [US1] Update `src/index.ts` `beforeLaunch`/`beforeConnect` exports to reuse shared fixtures, enforce safe defaults, and document behavior with TSDoc.
+- [x] T016 [US1] Expand maintainer instructions in `docs/testing.md` and the `README.md` Testing section to explain running unit suites, interpreting failures, and confirming disclosure messaging.
 
 **Parallel Example (US1)**: T010–T013 can proceed concurrently (separate spec files) while T016 updates documentation.
 

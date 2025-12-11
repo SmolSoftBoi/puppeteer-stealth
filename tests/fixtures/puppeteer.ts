@@ -17,11 +17,20 @@ export interface RateLimitProfile {
 }
 
 export interface TelemetryEvent {
-  type: string;
-  payload?: Record<string, unknown>;
+  hook: string;
+  plugin: string;
+  status: string;
+  details?: Record<string, unknown>;
+  error?: Error;
 }
 
-export const createTelemetrySink = () => {
+export interface RecordingTelemetrySink {
+  events: TelemetryEvent[];
+  track: (event: TelemetryEvent) => void;
+  reset: () => void;
+}
+
+export const createTelemetrySink = (): RecordingTelemetrySink => {
   const events: TelemetryEvent[] = [];
   return {
     events,
@@ -64,4 +73,3 @@ export const createRateLimitProfile = (
   requestsPerMinute: overrides.requestsPerMinute ?? 60,
   burst: overrides.burst ?? 10,
 });
-```}

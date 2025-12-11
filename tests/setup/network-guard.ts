@@ -1,14 +1,7 @@
-import * as dns from "node:dns";
-import * as http from "node:http";
-import * as https from "node:https";
-import * as net from "node:net";
-import * as tls from "node:tls";
-import { afterAll, afterEach, beforeAll, vi } from "vitest";
+import { afterEach, beforeAll, vi } from "vitest";
 
 const GUARD_MESSAGE =
   "Outbound network calls are forbidden during tests. Use fixtures or opt-in overrides.";
-
-const spies: Array<ReturnType<typeof vi.spyOn>> = [];
 
 type GuardEvent = { operation: string; target?: string };
 
@@ -28,12 +21,24 @@ const telemetry = (globalThis.__STEALTH_TEST_TELEMETRY__ ??= {
 export const getNetworkTelemetry = (): typeof telemetry => telemetry;
 
 const guard = (operation: string) => {
-  return (...args: unknown[]) => {
+  return (...args: unknown[]): never => {
     const target = extractTarget(args[0]);
     telemetry.guardEvents.push({ operation, target });
     throw new Error(
       `[network-guard] ${operation} prevented outbound access${target ? ` to ${target}` : ""}. ${GUARD_MESSAGE}`
     );
+  };
+};
+
+const guardAsync = (operation: string) => {
+  const syncGuard = guard(operation);
+  return (...args: unknown[]) => {
+    try {
+      syncGuard(...args);
+    } catch (error) {
+      return Promise.reject(error);
+    }
+    return Promise.reject(new Error(GUARD_MESSAGE));
   };
 };
 
@@ -46,34 +51,54 @@ const extractTarget = (input: unknown): string | undefined => {
   return undefined;
 };
 
+vi.mock("node:http", async () => {
+  const actual = await vi.importActual<typeof import("node:http")>("node:http");
+  return {
+    ...actual,
+    request: guard("http.request") as unknown as typeof actual.request,
+    get: guard("http.get") as unknown as typeof actual.get,
+  };
+});
+
+vi.mock("node:https", async () => {
+  const actual = await vi.importActual<typeof import("node:https")>("node:https");
+  return {
+    ...actual,
+    request: guard("https.request") as unknown as typeof actual.request,
+    get: guard("https.get") as unknown as typeof actual.get,
+  };
+});
+
+vi.mock("node:net", async () => {
+  const actual = await vi.importActual<typeof import("node:net")>("node:net");
+  return {
+    ...actual,
+    connect: guard("net.connect") as unknown as typeof actual.connect,
+  };
+});
+
+vi.mock("node:tls", async () => {
+  const actual = await vi.importActual<typeof import("node:tls")>("node:tls");
+  return {
+    ...actual,
+    connect: guard("tls.connect") as unknown as typeof actual.connect,
+  };
+});
+
+vi.mock("node:dns", async () => {
+  const actual = await vi.importActual<typeof import("node:dns")>("node:dns");
+  return {
+    ...actual,
+    lookup: guard("dns.lookup") as unknown as typeof actual.lookup,
+  };
+});
+
 beforeAll(() => {
   process.env.PUPPETEER_STEALTH_STRICT = process.env.PUPPETEER_STEALTH_STRICT ?? "1";
 
-  spies.push(vi.spyOn(http, "request").mockImplementation(guard("http.request")));
-  spies.push(vi.spyOn(http, "get").mockImplementation(guard("http.get")));
-  spies.push(vi.spyOn(https, "request").mockImplementation(guard("https.request")));
-  spies.push(vi.spyOn(https, "get").mockImplementation(guard("https.get")));
-  spies.push(vi.spyOn(net, "connect").mockImplementation(guard("net.connect")));
-  spies.push(vi.spyOn(tls, "connect").mockImplementation(guard("tls.connect")));
-  spies.push(vi.spyOn(dns, "lookup").mockImplementation(guard("dns.lookup")));
-
   if (typeof fetch === "function") {
-    const fetchGuard = (...args: Parameters<typeof fetch>): Promise<Response> => {
-      const target = extractTarget(args[0]);
-      telemetry.guardEvents.push({ operation: "fetch", target });
-      return Promise.reject(
-        new Error(
-          `[network-guard] fetch prevented outbound access${target ? ` to ${target}` : ""}. ${GUARD_MESSAGE}`
-        )
-      );
-    };
-
-    spies.push(vi.spyOn(globalThis, "fetch").mockImplementation(fetchGuard as typeof fetch));
+    vi.spyOn(globalThis, "fetch").mockImplementation(guardAsync("fetch") as typeof fetch);
   }
-});
-
-afterAll(() => {
-  spies.forEach((spy) => spy.mockRestore());
 });
 
 afterEach(() => {

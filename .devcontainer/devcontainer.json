@@ -6,7 +6,7 @@
 	"image": "mcr.microsoft.com/devcontainers/universal:2-linux",
 	"features": {
 		"ghcr.io/devcontainers/features/node:1": {
-			"version": "22"
+			"version": "20"
 		},
 		"ghcr.io/devcontainer-community/devcontainer-features/astral.sh-uv:1": {}
 	}

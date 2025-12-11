@@ -51,8 +51,9 @@ await stealth.harden(browser);
 
 ## Testing
 
-- Run unit tests with `yarn test:unit` and local Puppeteer fixture tests with `yarn test:fixtures`.
-- External sites must **never** be hit by CI; fixtures emulate real targets.
+- Run the full suite with `yarn test`; use `yarn test:watch` for hot reloading and `yarn test:coverage` to enforce the 100% function / 90% global thresholds.
+- The fail-fast network guard (see `tests/setup/network-guard.ts`) aborts any attempt to access real `http/https` endpoints so contributors cannot accidentally probe live sites.
+- Read `docs/testing.md` for the full folder layout, responsible-automation safeguards, and CI expectations before adding or modifying specs.
 
 ## Contributing
 
