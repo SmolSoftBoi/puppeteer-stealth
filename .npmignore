@@ -1,0 +1,10 @@
+specs/
+tests/
+.docs/
+docs/
+coverage/
+.github/
+.devcontainer/
+.vscode/
+*.log
+scripts/

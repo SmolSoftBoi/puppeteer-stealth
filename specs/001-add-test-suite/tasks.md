@@ -9,9 +9,9 @@
 
 **Purpose**: Align runtime prerequisites (Node 20 + Yarn) and create the folder skeleton demanded by the plan before adding tooling.
 
-- [ ] T001 Update Node requirement to `>=20` in `package.json` and document Yarn + Node prerequisites in `README.md`.
-- [ ] T002 [P] Create `.nvmrc` at repo root pinning Node 20.x to keep local and CI environments aligned.
-- [ ] T003 [P] Scaffold `tests/unit`, `tests/integration`, `tests/fixtures`, and `tests/setup` directories plus `tests/README.md` describing layout and compliance guardrails.
+- [x] T001 Update Node requirement to `>=20` in `package.json` and document Yarn + Node prerequisites in `README.md`.
+- [x] T002 [P] Create `.nvmrc` at repo root pinning Node 20.x to keep local and CI environments aligned.
+- [x] T003 [P] Scaffold `tests/unit`, `tests/integration`, `tests/fixtures`, and `tests/setup` directories plus `tests/README.md` describing layout and compliance guardrails.
 
 ---
 
@@ -19,12 +19,12 @@
 
 **Purpose**: Install and configure the Vitest stack, coverage thresholds, fixtures, and guardrails that every user story depends upon.
 
-- [ ] T004 Install Vitest tooling (e.g., `vitest`, `@vitest/coverage-c8`, `tsx`, `@types/node`) and remove legacy Jest deps inside `package.json`/`yarn.lock`.
-- [ ] T005 [P] Create `vitest.config.ts` with node environment default, coverage thresholds (functions 100%, global 90%), include/exclude globs, and reference setup files.
-- [ ] T006 [P] Add Yarn scripts `test`, `test:watch`, `test:coverage` in `package.json` mapping to the Vitest commands defined in the contracts doc.
-- [ ] T007 [P] Implement shared Puppeteer mock factories + rate-limit profile per the data model inside `tests/fixtures/puppeteer.ts` and export typed helpers.
-- [ ] T008 [P] Create fail-fast network guard + telemetry sink under `tests/setup/network-guard.ts`, mocking `net/http` modules and hooking into Vitest setup.
-- [ ] T009 [P] Update `tsconfig.json` to include `tests/**`, add strict compiler options for tests, and configure a path alias (e.g., `@tests/*`) pointing to `tests/`.
+- [x] T004 Install Vitest tooling (e.g., `vitest`, `@vitest/coverage-c8`, `tsx`, `@types/node`) and remove legacy Jest deps inside `package.json`/`yarn.lock`.
+- [x] T005 [P] Create `vitest.config.ts` with node environment default, coverage thresholds (functions 100%, global 90%), include/exclude globs, and reference setup files.
+- [x] T006 [P] Add Yarn scripts `test`, `test:watch`, `test:coverage` in `package.json` mapping to the Vitest commands defined in the contracts doc.
+- [x] T007 [P] Implement shared Puppeteer mock factories + rate-limit profile per the data model inside `tests/fixtures/puppeteer.ts` and export typed helpers.
+- [x] T008 [P] Create fail-fast network guard + telemetry sink under `tests/setup/network-guard.ts`, mocking `net/http` modules and hooking into Vitest setup.
+- [x] T009 [P] Update `tsconfig.json` to include `tests/**`, add strict compiler options for tests, and configure a path alias (e.g., `@tests/*`) pointing to `tests/`.
 
 **Checkpoint**: Once T004–T009 pass review, user stories can begin.
 

@@ -20,6 +20,11 @@ Using this library does **not** grant permission to violate website terms, regio
 
 Pull requests or issues that attempt to bypass security controls will be closed immediately.
 
+## Prerequisites
+
+- **Node.js 20.x (Active LTS)** – enforced via `package.json` engines and the project `.nvmrc`.
+- **Yarn 1.22+** – required for the scripts defined in this repository and mirrored in CI.
+
 ## Getting Started
 
 ```bash
