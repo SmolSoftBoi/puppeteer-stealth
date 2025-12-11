@@ -1,0 +1,119 @@
+openapi: 3.0.3
+info:
+  title: Puppeteer Stealth Testing Control Plane
+  version: 0.1.0
+  description: |
+    Logical contract describing how contributors trigger the three required Yarn scripts.
+    Each "endpoint" maps to a package.json script so tooling/CI integrations can treat them uniformly.
+servers:
+  - url: https://ci.local
+    description: GitHub Actions or other CI runners
+  - url: http://localhost:4873
+    description: Local developer machine running yarn scripts
+paths:
+  /tests/run:
+    post:
+      summary: Execute the default Vitest suite with coverage snapshotting disabled.
+      operationId: runTests
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                watch:
+                  type: boolean
+                  default: false
+                filter:
+                  type: string
+                  description: Optional glob or name to limit test execution.
+              required: []
+      responses:
+        '200':
+          description: Tests executed successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  passed:
+                    type: boolean
+                    example: true
+                  durationMs:
+                    type: integer
+                    example: 42000
+                  coverageSnapshot:
+                    type: object
+                    properties:
+                      statements:
+                        type: number
+                        example: 0.92
+                      branches:
+                        type: number
+                        example: 0.9
+        '422':
+          description: Invalid filter or watch combination.
+  /tests/watch:
+    post:
+      summary: Start Vitest in watch mode for local development.
+      operationId: watchTests
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ui:
+                  type: boolean
+                  description: Enable Vitest UI dashboard.
+                  default: false
+      responses:
+        '200':
+          description: Watcher started; stream continues until client disconnects.
+  /tests/coverage:
+    post:
+      summary: Run the suite with coverage instrumentation and enforced thresholds.
+      operationId: coverageTests
+      requestBody:
+        required: false
+      responses:
+        '200':
+          description: Coverage meets thresholds; LCOV artifact emitted.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  lcovPath:
+                    type: string
+                    example: coverage/lcov.info
+                  summary:
+                    type: object
+                    properties:
+                      statements:
+                        type: number
+                        example: 0.93
+                      functions:
+                        type: number
+                        example: 1
+                      branches:
+                        type: number
+                        example: 0.91
+        '417':
+          description: Coverage thresholds not met.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  failedMetric:
+                    type: string
+                    example: branches
+                  expected:
+                    type: number
+                    example: 0.9
+                  actual:
+                    type: number
+                    example: 0.86
