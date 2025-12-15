@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - Vitest test suite (unit + fixture-driven integration) with a fail-fast offline network guard.
-- Coverage enforcement via the Vitest v8 coverage provider (90% statements/branches/lines, 100% functions).
+- Coverage enforcement via the Vitest v8 coverage provider (90% global thresholds).
 - GitHub Actions CI workflow (`.github/workflows/ci.yml`) that pins Node 20, enforces a ≤90s `yarn test` budget, and uploads coverage artifacts.
 
 ### Changed

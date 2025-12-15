@@ -119,9 +119,13 @@ export const attachHookCounters = (
   counters: HookCounters
 ): StealthPluginHooks[] => {
   return plugins.map((plugin) => {
+    const onPageCreatedHook = plugin.onPageCreated;
+    const beforeLaunchHook = plugin.beforeLaunch;
+    const beforeConnectHook = plugin.beforeConnect;
+
     return {
       ...plugin,
-      onPageCreated: plugin.onPageCreated
+      onPageCreated: onPageCreatedHook
         ? async (page) => {
             counters[plugin.name] ??= {
               onPageCreated: 0,
@@ -129,10 +133,10 @@ export const attachHookCounters = (
               beforeConnect: 0,
             };
             counters[plugin.name].onPageCreated += 1;
-            return plugin.onPageCreated(page);
+            return onPageCreatedHook(page);
           }
         : undefined,
-      beforeLaunch: plugin.beforeLaunch
+      beforeLaunch: beforeLaunchHook
         ? async (options) => {
             counters[plugin.name] ??= {
               onPageCreated: 0,
@@ -140,10 +144,10 @@ export const attachHookCounters = (
               beforeConnect: 0,
             };
             counters[plugin.name].beforeLaunch += 1;
-            return plugin.beforeLaunch(options);
+            return beforeLaunchHook(options);
           }
         : undefined,
-      beforeConnect: plugin.beforeConnect
+      beforeConnect: beforeConnectHook
         ? async () => {
             counters[plugin.name] ??= {
               onPageCreated: 0,
@@ -151,7 +155,7 @@ export const attachHookCounters = (
               beforeConnect: 0,
             };
             counters[plugin.name].beforeConnect += 1;
-            return plugin.beforeConnect();
+            return beforeConnectHook();
           }
         : undefined,
     };

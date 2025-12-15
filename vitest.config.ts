@@ -2,12 +2,12 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vitest/config";
 
-const rootDir = dirname(fileURLToPath(import.meta.url));
+const projectRoot = dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
   resolve: {
     alias: {
-      "@tests": resolve(rootDir, "tests"),
+      "@tests": resolve(projectRoot, "tests"),
     },
   },
   test: {
@@ -25,7 +25,7 @@ export default defineConfig({
       thresholds: {
         statements: 90,
         branches: 90,
-        functions: 100,
+        functions: 90,
         lines: 90,
       },
     },

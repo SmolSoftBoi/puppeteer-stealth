@@ -7,6 +7,7 @@
   "author": "Kristian Matthews <kristian.matthews@me.com>",
   "scripts": {
     "lint": "eslint src/**.ts --max-warnings=0",
+    "typecheck": "tsc -p tsconfig.test.json --noEmit",
     "build": "rimraf ./dist && tsc -p tsconfig.build.json",
     "test": "vitest run --config vitest.config.ts",
     "test:watch": "vitest watch --config vitest.config.ts",

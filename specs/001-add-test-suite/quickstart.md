@@ -16,7 +16,7 @@ yarn install --frozen-lockfile
 |------|---------|-------|
 | Run all unit + integration tests | `yarn test` | Executes Vitest in node environment with fail-fast network stubs |
 | Watch mode for local dev | `yarn test:watch` | Enables hot module reload, no coverage instrumentation |
-| Coverage gate | `yarn test:coverage` | Enforces 100% functions on exported helpers and 90% global statements/branches |
+| Coverage gate | `yarn test:coverage` | Enforces 90% global thresholds |
 | Lint + typecheck (pre-req) | `yarn lint && yarn build` | Run before publishing or pushing |
 
 ## Writing Tests

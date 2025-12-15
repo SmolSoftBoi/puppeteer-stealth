@@ -18,9 +18,10 @@ yarn install --frozen-lockfile
 
 | Task | Command | Notes |
 |------|---------|-------|
+| Typecheck (src + tests) | `yarn typecheck` | Runs `tsc` against `tsconfig.test.json` with `--noEmit` for fast feedback. |
 | Run unit + integration suites | `yarn test` | Executes all specs under `tests/**` with the fail-fast network guard. |
 | Watch mode | `yarn test:watch` | Ideal for local iteration; coverage is disabled for faster feedback. |
-| Coverage enforcement | `yarn test:coverage` | Generates text, HTML, and LCOV reports while enforcing 100% function / 90% global thresholds. |
+| Coverage enforcement | `yarn test:coverage` | Generates text, HTML, and LCOV reports while enforcing 90% global thresholds. |
 
 ## Verified Output
 

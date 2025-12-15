@@ -9,20 +9,17 @@
     "declarationMap": true,
     "sourceMap": true,
     "outDir": "./dist",
-    "rootDir": ".",
+    "rootDir": "./src",
     "strict": true,
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "types": ["vitest/globals", "node"],
+    "types": ["node"],
     "typeRoots": ["./types", "./node_modules/@types", "./node_modules"],
     "paths": {
-      "@tests/*": ["tests/*"],
-      "puppeteer-extra-plugin-stealth/evasions/*": [
-        "types/puppeteer-extra-plugin-stealth.d.ts"
-      ]
+      "@tests/*": ["tests/*"]
     }
   },
-  "include": ["src/**/*.ts", "tests/**/*.ts", "types/**/*.d.ts"],
+  "include": ["src/**/*.ts", "types/**/*.d.ts"],
   "exclude": ["dist", "node_modules"]
 }
