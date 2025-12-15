@@ -7,25 +7,29 @@
   "author": "Kristian Matthews <kristian.matthews@me.com>",
   "scripts": {
     "lint": "eslint src/**.ts --max-warnings=0",
-    "build": "rimraf ./dist && tsc",
-    "test": "jest --coverage",
-    "test:watch": "jest --coverage --watch",
+    "typecheck": "tsc -p tsconfig.test.json --noEmit",
+    "build": "rimraf ./dist && tsc -p tsconfig.build.json",
+    "test": "vitest run --config vitest.config.ts",
+    "test:watch": "vitest watch --config vitest.config.ts",
+    "test:coverage": "vitest run --config vitest.config.ts --coverage",
     "prepublishOnly": "npm run lint && npm run build"
   },
   "engines": {
-    "node": ">=8"
+    "node": ">=20"
   },
   "dependencies": {
     "puppeteer-extra-plugin-stealth": "^2.11.2"
   },
   "devDependencies": {
-    "@types/jest": "^29.5.8",
+    "@types/node": "^25.0.0",
     "@typescript-eslint/eslint-plugin": "^4.28.5",
     "@typescript-eslint/parser": "^4.28.5",
+    "@vitest/coverage-v8": "^4.0.15",
     "eslint": "^7.31.0",
-    "jest": "^29.7.0",
     "puppeteer": "^13.7.0",
-    "ts-jest": "^29.1.1",
-    "typescript": "^4.3.5"
+    "rimraf": "^6.1.2",
+    "tsx": "^4.21.0",
+    "typescript": "^5.6.3",
+    "vitest": "^4.0.15"
   }
 }

@@ -20,6 +20,11 @@ Using this library does **not** grant permission to violate website terms, regio
 
 Pull requests or issues that attempt to bypass security controls will be closed immediately.
 
+## Prerequisites
+
+- **Node.js 20.x (Active LTS)** – enforced via `package.json` engines and the project `.nvmrc`.
+- **Yarn 1.22+** – required for the scripts defined in this repository and mirrored in CI.
+
 ## Getting Started
 
 ```bash
@@ -46,13 +51,14 @@ await stealth.harden(browser);
 
 ## Testing
 
-- Run unit tests with `yarn test:unit` and local Puppeteer fixture tests with `yarn test:fixtures`.
-- External sites must **never** be hit by CI; fixtures emulate real targets.
+- Run the full suite with `yarn test`; use `yarn test:watch` for hot reloading and `yarn test:coverage` to enforce the 90% global thresholds.
+- The fail-fast network guard (see `tests/setup/network-guard.ts`) aborts any attempt to access real `http/https` endpoints so contributors cannot accidentally probe live sites.
+- Read `docs/testing.md` for the full folder layout, responsible-automation safeguards, and CI expectations before adding or modifying specs.
 
 ## Contributing
 
 1. Open an issue describing the benign automation goal you are solving.
 2. Provide a spec/plan via `/speckit` commands and confirm it satisfies every constitutional principle.
-3. Include unit + fixture integration tests, updated TSDoc with runnable examples, changelog entries, and bundle-size notes.
+3. Include unit + fixture integration tests (`yarn test` must stay ≤ 90s), keep coverage thresholds green via `yarn test:coverage`, and ensure the network guard remains satisfied (no live `http/https` calls).
 
 We welcome improvements that enhance transparency, safety, and maintainability.

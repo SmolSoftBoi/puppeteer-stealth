@@ -1,0 +1,83 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: yarn
+          cache-dependency-path: yarn.lock
+
+      - name: Cache Vitest
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/vitest
+          key: ${{ runner.os }}-vitest-${{ hashFiles('yarn.lock', 'vitest.config.ts') }}
+          restore-keys: |
+            ${{ runner.os }}-vitest-
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Build
+        run: yarn build
+
+      - name: Test (timed)
+        id: tests
+        shell: bash
+        run: |
+          start=$(date +%s)
+          yarn test
+          end=$(date +%s)
+          duration=$((end-start))
+
+          echo "duration_seconds=$duration" >> "$GITHUB_OUTPUT"
+          echo "Test duration: ${duration}s" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Enforce test duration budget
+        shell: bash
+        run: |
+          duration="${{ steps.tests.outputs.duration_seconds }}"
+          echo "Duration: ${duration}s"
+
+          if [ -z "$duration" ]; then
+            echo "Missing duration output" >&2
+            exit 1
+          fi
+
+          if [ "$duration" -gt 90 ]; then
+            echo "Test suite exceeded 90s budget (${duration}s)." >&2
+            exit 1
+          fi
+
+      - name: Coverage
+        run: yarn test:coverage
+
+      - name: Coverage summary
+        shell: bash
+        run: |
+          echo "Coverage artifacts generated under ./coverage (lcov + html)" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload coverage artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage/
+          if-no-files-found: error
