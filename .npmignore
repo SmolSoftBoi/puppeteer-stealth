@@ -1,4 +1,5 @@
 specs/
+.specify/
 tests/
 .docs/
 docs/

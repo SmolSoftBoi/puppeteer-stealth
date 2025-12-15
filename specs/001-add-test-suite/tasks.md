@@ -59,16 +59,16 @@
 
 ### Tests for User Story 2
 
-- [ ] T017 [P] [US2] Create `tests/integration/pluginHooks.spec.ts` verifying each selected stealth plugin’s `onPageCreated` hook executes once using mocked `Page` fixtures.
-- [ ] T018 [P] [US2] Create `tests/integration/rateLimitGuard.spec.ts` proving `beforeLaunch` and `beforeConnect` respect rate-limit profiles and never reach network APIs.
-- [ ] T019 [P] [US2] Create `tests/integration/networkGuardFailure.spec.ts` that intentionally attempts an outbound call and asserts the fail-fast guard surfaces the compliance message.
-- [ ] T020 [P] [US2] Create `tests/integration/chromiumMissing.spec.ts` simulating absent Puppeteer binaries, ensuring tests skip gracefully with guidance as required by the edge cases.
+- [x] T017 [P] [US2] Create `tests/integration/pluginHooks.spec.ts` verifying each selected stealth plugin’s `onPageCreated` hook executes once using mocked `Page` fixtures.
+- [x] T018 [P] [US2] Create `tests/integration/rateLimitGuard.spec.ts` proving `beforeLaunch` and `beforeConnect` respect rate-limit profiles and never reach network APIs.
+- [x] T019 [P] [US2] Create `tests/integration/networkGuardFailure.spec.ts` that intentionally attempts an outbound call and asserts the fail-fast guard surfaces the compliance message.
+- [x] T020 [P] [US2] Create `tests/integration/chromiumMissing.spec.ts` simulating absent Puppeteer binaries, ensuring tests skip gracefully with guidance as required by the edge cases.
 
 ### Implementation for User Story 2
 
-- [ ] T021 [US2] Extend `tests/fixtures/pluginManifest.ts` to import real `puppeteer-extra-plugin-stealth` modules, expose opt-in lists, and track hook invocations.
-- [ ] T022 [US2] Enhance `src/index.ts` to accept a module selection config so integration tests (and future contributors) can enable explicit plugin subsets.
-- [ ] T023 [US2] Document integration workflow (fixtures, opt-in flags, network guard expectations, chromium-missing handling) in `docs/testing.md` and reference it from `quickstart.md`.
+- [x] T021 [US2] Extend `tests/fixtures/pluginManifest.ts` to import real `puppeteer-extra-plugin-stealth` modules, expose opt-in lists, and track hook invocations.
+- [x] T022 [US2] Enhance `src/index.ts` to accept a module selection config so integration tests (and future contributors) can enable explicit plugin subsets.
+- [x] T023 [US2] Document integration workflow (fixtures, opt-in flags, network guard expectations, chromium-missing handling) in `docs/testing.md` and reference it from `quickstart.md`.
 
 **Parallel Example (US2)**: T017–T020 target distinct spec files and can be developed simultaneously, while T021 builds shared fixtures another contributor can consume.
 
@@ -81,15 +81,15 @@
 
 ### Tests for User Story 3
 
-- [ ] T024 [P] [US3] Add `tests/integration/coverageFail.spec.ts` that simulates coverage below thresholds (via fixture reports) and asserts the coverage script exits non-zero.
+- [x] T024 [P] [US3] Add `tests/integration/coverageFail.spec.ts` that simulates coverage below thresholds (via fixture reports) and asserts the coverage script exits non-zero.
 
 ### Implementation for User Story 3
 
-- [ ] T025 [US3] Update `.github/workflows/ci.yml` to pin Node 20, cache Yarn/Vitest artifacts, and run `yarn lint`, `yarn build`, `yarn test`, and `yarn test:coverage` sequentially.
-- [ ] T026 [US3] Enhance the CI workflow to record/publish `yarn test` wall-clock duration and fail the job when it exceeds the 90-second success criterion.
-- [ ] T027 [US3] Add coverage artifact upload + summary comment steps in `.github/workflows/ci.yml`, persisting `coverage/lcov.info` and HTML reports.
-- [ ] T028 [US3] Document CI execution, coverage thresholds, negative network tests, timing checks, and troubleshooting in `docs/testing.md`.
-- [ ] T029 [US3] Update the `README.md` Contributing section to require new exports include unit + fixture tests, mention opt-in/disclaimer assertions, and describe CI coverage/timing gates.
+- [x] T025 [US3] Update `.github/workflows/ci.yml` to pin Node 20, cache Yarn/Vitest artifacts, and run `yarn lint`, `yarn build`, `yarn test`, and `yarn test:coverage` sequentially.
+- [x] T026 [US3] Enhance the CI workflow to record/publish `yarn test` wall-clock duration and fail the job when it exceeds the 90-second success criterion.
+- [x] T027 [US3] Add coverage artifact upload + summary comment steps in `.github/workflows/ci.yml`, persisting `coverage/lcov.info` and HTML reports.
+- [x] T028 [US3] Document CI execution, coverage thresholds, negative network tests, timing checks, and troubleshooting in `docs/testing.md`.
+- [x] T029 [US3] Update the `README.md` Contributing section to require new exports include unit + fixture tests, mention opt-in/disclaimer assertions, and describe CI coverage/timing gates.
 
 **Parallel Example (US3)**: While one engineer adjusts the workflow commands (T025), another can add timing instrumentation (T026) and artifact uploads (T027), with documentation tasks (T028–T029) running in parallel after command names stabilize.
 
@@ -99,9 +99,9 @@
 
 **Purpose**: Finalize documentation, changelog, and ecosystem metadata so the feature ships cleanly.
 
-- [ ] T030 [P] Update `techstack.md` and `techstack.yml` to list Vitest, @vitest/coverage-c8, and the new testing workflow.
-- [ ] T031 [P] Add or update `CHANGELOG.md` with entries covering the Vitest migration, coverage/timing gates, and new Yarn scripts.
-- [ ] T032 Run the documented quickstart commands end-to-end, capture sample output/coverage badge/timing screenshot, and embed the results in `docs/testing.md` for future audits.
+- [x] T030 [P] Update `techstack.md` and `techstack.yml` to list Vitest, @vitest/coverage-v8, and the new testing workflow.
+- [x] T031 [P] Add or update `CHANGELOG.md` with entries covering the Vitest migration, coverage/timing gates, and new Yarn scripts.
+- [x] T032 Run the documented quickstart commands end-to-end, capture sample output/coverage badge/timing screenshot, and embed the results in `docs/testing.md` for future audits.
 
 ---
 

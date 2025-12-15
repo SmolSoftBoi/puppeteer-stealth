@@ -28,6 +28,12 @@ export type LaunchConfiguration = LaunchOptions &
     BrowserLaunchArgumentOptions &
     BrowserConnectOptions;
 
+export interface RateLimitProfile {
+    site: string;
+    requestsPerMinute: number;
+    burst: number;
+}
+
 type HookName = "onPageCreated" | "beforeLaunch" | "beforeConnect";
 
 export interface StealthTelemetryEvent {
@@ -51,6 +57,8 @@ export interface StealthPluginHooks {
 
 export interface StealthHandlerOptions {
     plugins?: StealthPluginHooks[];
+    modules?: string[];
+    rateLimitProfile?: RateLimitProfile;
     telemetry?: TelemetrySink;
     strictCompliance?: boolean;
 }
@@ -83,11 +91,19 @@ const pluginFactories: Array<{ name: string; factory: PluginFactory }> = [
 const instantiateDefaultPlugins = (): StealthPluginHooks[] =>
     pluginFactories.map(({ name, factory }) => wrapPlugin(factory(), name));
 
+const normalizePluginName = (name: string, fallbackName: string): string => {
+    if (!name) return fallbackName;
+    if (name.startsWith("stealth/evasions/")) {
+        return name.slice("stealth/evasions/".length);
+    }
+    return name;
+};
+
 const wrapPlugin = (
     plugin: Partial<StealthPluginHooks> & { name?: string },
     fallbackName: string
 ): StealthPluginHooks => ({
-    name: plugin.name ?? fallbackName,
+    name: normalizePluginName(plugin.name ?? fallbackName, fallbackName),
     onPageCreated: plugin.onPageCreated?.bind(plugin),
     beforeLaunch: plugin.beforeLaunch?.bind(plugin),
     beforeConnect: plugin.beforeConnect?.bind(plugin),
@@ -112,8 +128,27 @@ const createConsoleTelemetry = (): TelemetrySink => ({
 const resolveTelemetry = (options?: StealthHandlerOptions): TelemetrySink =>
     options?.telemetry ?? createConsoleTelemetry();
 
-const resolvePlugins = (options?: StealthHandlerOptions): StealthPluginHooks[] =>
-    options?.plugins ?? instantiateDefaultPlugins();
+const resolvePlugins = (options?: StealthHandlerOptions): StealthPluginHooks[] => {
+    if (options?.plugins) {
+        return options.plugins;
+    }
+
+    const requestedModules = options?.modules;
+    if (!requestedModules || requestedModules.length === 0) {
+        return instantiateDefaultPlugins();
+    }
+
+    const byName = new Map(pluginFactories.map((entry) => [entry.name, entry] as const));
+    const unknown = requestedModules.filter((name) => !byName.has(name));
+    if (unknown.length) {
+        throw new Error(`Unknown stealth module(s): ${unknown.join(", ")}`);
+    }
+
+    return requestedModules.map((name) => {
+        const entry = byName.get(name)!;
+        return wrapPlugin(entry.factory(), entry.name);
+    });
+};
 
 const shouldEnforceSafeguards = (options?: StealthHandlerOptions): boolean => {
     if (typeof options?.strictCompliance === "boolean") {
@@ -125,14 +160,24 @@ const shouldEnforceSafeguards = (options?: StealthHandlerOptions): boolean => {
 const emitResponsibleAutomation = (
     telemetry: TelemetrySink,
     origin: HookName,
-    strict: boolean
+    strict: boolean,
+    handlerOptions?: StealthHandlerOptions
 ) => {
     if (!strict) return;
     telemetry.track({
         hook: "safeguard",
         plugin: "responsible-automation",
         status: "success",
-        details: { origin, message: RESPONSIBLE_AUTOMATION_MESSAGE },
+        details: {
+            origin,
+            message: RESPONSIBLE_AUTOMATION_MESSAGE,
+            ...(handlerOptions?.modules?.length
+                ? { modules: [...handlerOptions.modules] }
+                : {}),
+            ...(handlerOptions?.rateLimitProfile
+                ? { rateLimitProfile: handlerOptions.rateLimitProfile }
+                : {}),
+        },
     });
 };
 
@@ -171,9 +216,7 @@ const normalizeLaunchOptions = (
 };
 
 const ensureLaunchGuards = (options: LaunchConfiguration) => {
-    if (!options.args) {
-        options.args = [];
-    }
+    options.args = options.args ?? [];
 
     for (const arg of DEFAULT_ARGS) {
         if (!options.args.includes(arg)) {
@@ -207,7 +250,12 @@ export async function onPageCreated(
 ): Promise<void[]> {
     const telemetry = resolveTelemetry(handlerOptions);
     const plugins = resolvePlugins(handlerOptions);
-    emitResponsibleAutomation(telemetry, "onPageCreated", shouldEnforceSafeguards(handlerOptions));
+    emitResponsibleAutomation(
+        telemetry,
+        "onPageCreated",
+        shouldEnforceSafeguards(handlerOptions),
+        handlerOptions
+    );
 
     const results: void[] = [];
 
@@ -238,7 +286,12 @@ export async function beforeLaunch(
     const telemetry = resolveTelemetry(handlerOptions);
     const plugins = resolvePlugins(handlerOptions);
     const normalized = normalizeLaunchOptions(options);
-    emitResponsibleAutomation(telemetry, "beforeLaunch", shouldEnforceSafeguards(handlerOptions));
+    emitResponsibleAutomation(
+        telemetry,
+        "beforeLaunch",
+        shouldEnforceSafeguards(handlerOptions),
+        handlerOptions
+    );
 
     for (const plugin of plugins) {
         if (!plugin.beforeLaunch) continue;
@@ -267,7 +320,12 @@ export async function beforeConnect(
 ): Promise<void[]> {
     const telemetry = resolveTelemetry(handlerOptions);
     const plugins = resolvePlugins(handlerOptions);
-    emitResponsibleAutomation(telemetry, "beforeConnect", shouldEnforceSafeguards(handlerOptions));
+    emitResponsibleAutomation(
+        telemetry,
+        "beforeConnect",
+        shouldEnforceSafeguards(handlerOptions),
+        handlerOptions
+    );
 
     const results: void[] = [];
 

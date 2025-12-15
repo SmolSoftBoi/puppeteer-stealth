@@ -22,13 +22,41 @@ yarn install --frozen-lockfile
 | Watch mode | `yarn test:watch` | Ideal for local iteration; coverage is disabled for faster feedback. |
 | Coverage enforcement | `yarn test:coverage` | Generates text, HTML, and LCOV reports while enforcing 100% function / 90% global thresholds. |
 
+## Verified Output
+
+`yarn test`:
+
+```text
+$ vitest run --config vitest.config.ts
+
+ RUN  v4.0.15 /workspaces/puppeteer-stealth
+
+ Test Files  11 passed (11)
+		Tests  20 passed (20)
+	Duration  3.80s
+```
+
+`yarn test:coverage`:
+
+```text
+$ vitest run --config vitest.config.ts --coverage
+
+ RUN  v4.0.15 /workspaces/puppeteer-stealth
+	 Coverage enabled with v8
+
+ % Coverage report from v8
+----------|---------|----------|---------|---------|
+All files |   96.36 |    90.47 |     100 |      99 |
+----------|---------|----------|---------|---------|
+```
+
 ## Folder Layout
 
 | Path | Description |
 |------|-------------|
 | `tests/unit/` | Fast specs for every exported helper (`onPageCreated`, `beforeLaunch`, `beforeConnect`, safeguards). |
-| `tests/integration/` | Fixture-driven wiring tests (coming online during Phase 4) that import real `puppeteer-extra-plugin-stealth` modules without reaching the internet. |
-| `tests/fixtures/` | Shared Puppeteer mocks, telemetry sinks, and rate-limit profiles for both unit and integration specs. |
+| `tests/integration/` | Fixture-driven wiring tests that import real `puppeteer-extra-plugin-stealth` modules without reaching the internet. |
+| `tests/fixtures/` | Shared Puppeteer mocks, telemetry sinks, rate-limit profiles, and the real-plugin manifest used by integration specs. |
 | `tests/setup/` | Global hooks, including the fail-fast network guard that stubs `http`, `https`, `net`, `tls`, `dns`, and `fetch`. |
 
 ## Responsible Automation Guardrails
@@ -42,10 +70,21 @@ yarn install --frozen-lockfile
 - Inject custom plugin objects via the optional handler parameters to validate ordering, telemetry, and error propagation without touching real stealth modules.
 - Use the helpers from `tests/fixtures/puppeteer.ts` to build deterministic launch options, mocked `Page` objects, and telemetry sinks for assertions.
 
-## Integration & CI (Forward-looking)
+## Integration & CI
 
-- Integration specs will live under `tests/integration/` and will rely on the same fixtures plus a plugin manifest that imports real stealth modules while still running offline.
-- GitHub Actions runs `yarn test` and `yarn test:coverage`, uploads `coverage/lcov.info`, and fails if runtime exceeds the documented 90-second budget once Phase 5 is complete.
+- Use `tests/fixtures/pluginManifest.ts` to decide which real stealth modules to exercise and keep selection consistent across specs.
+- Prefer enabling real modules via `modules: [...]` in `StealthHandlerOptions` (instead of injecting hand-written plugin stubs) so tests validate the public selection surface.
+- Integration specs must remain offline. If anything calls `fetch`, `http(s)`, `net`, `tls`, or `dns`, the global network guard will fail the test with the Responsible Automation message.
+- `tests/integration/chromiumMissing.spec.ts` verifies Chromium availability and skips gracefully with guidance when Puppeteer binaries are absent.
+
+GitHub Actions runs `yarn test` and `yarn test:coverage`, uploads coverage artifacts, and fails if runtime exceeds the documented 90-second budget.
+
+### CI Gates
+
+- Workflow: `.github/workflows/ci.yml`
+- Runtime: Node.js 20.x
+- Order: `yarn lint` → `yarn build` → `yarn test` (timed, must be ≤ 90s) → `yarn test:coverage`
+- Artifacts: uploads the full `coverage/` directory (including `lcov.info` + HTML report)
 
 ## Troubleshooting
 

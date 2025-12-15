@@ -22,7 +22,7 @@ yarn install --frozen-lockfile
 ## Writing Tests
 1. Place unit specs under `tests/unit/<module>.spec.ts` and integration flows under `tests/integration/<scenario>.spec.ts`.
 2. Reuse factories from `tests/fixtures/` to mock Puppeteer `Page`, `Browser`, and launch options—never instantiate Chromium directly.
-3. Import real `puppeteer-extra-plugin-stealth` plugins when validating wiring so the suite exercises actual lifecycle hooks.
+3. Use `tests/fixtures/pluginManifest.ts` to exercise real `puppeteer-extra-plugin-stealth` plugins when validating wiring; prefer enabling them via `modules: [...]` (rather than injecting hand-written stubs) so the public selection surface stays covered.
 4. Add assertions that confirm rate-limit defaults, opt-in flags, and telemetry logs remain intact.
 
 ## Compliance Guardrails

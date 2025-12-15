@@ -59,6 +59,6 @@ await stealth.harden(browser);
 
 1. Open an issue describing the benign automation goal you are solving.
 2. Provide a spec/plan via `/speckit` commands and confirm it satisfies every constitutional principle.
-3. Include unit + fixture integration tests, updated TSDoc with runnable examples, changelog entries, and bundle-size notes.
+3. Include unit + fixture integration tests (`yarn test` must stay ≤ 90s), keep coverage thresholds green via `yarn test:coverage`, and ensure the network guard remains satisfied (no live `http/https` calls).
 
 We welcome improvements that enhance transparency, safety, and maintainability.

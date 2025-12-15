@@ -123,3 +123,17 @@ dist
 .pnp.*
 
 # End of https://www.toptal.com/developers/gitignore/api/node
+
+# Editor/OS cruft
+.DS_Store
+Thumbs.db
+*.swp
+*.tmp
+
+# IDE/editor settings
+.vscode/
+.idea/
+
+# Vitest temporary artifacts
+.vitest/
+coverage-fail/

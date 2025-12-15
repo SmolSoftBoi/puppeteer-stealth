@@ -45,7 +45,15 @@ export const createTelemetrySink = (): RecordingTelemetrySink => {
 
 export const createMockPage = (overrides: Partial<Page> = {}): Page => {
   const page = {
+    browser: vi.fn(() => ({
+      userAgent: vi.fn(async () => "Mozilla/5.0"),
+      version: vi.fn(async () => "HeadlessChrome/0.0.0"),
+    })),
+    _client: vi.fn(() => ({
+      send: vi.fn(async () => ({})),
+    })),
     setUserAgent: vi.fn(),
+    evaluate: vi.fn(),
     evaluateOnNewDocument: vi.fn(),
     on: vi.fn(),
     exposeFunction: vi.fn(),

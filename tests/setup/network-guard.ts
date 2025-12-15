@@ -1,7 +1,10 @@
 import { afterEach, beforeAll, vi } from "vitest";
 
+const RESPONSIBLE_AUTOMATION_MESSAGE =
+  "Automation must remain transparent: respect rate limits, honor robots.txt, and disclose opt-in evasions before running tests.";
+
 const GUARD_MESSAGE =
-  "Outbound network calls are forbidden during tests. Use fixtures or opt-in overrides.";
+  `Outbound network calls are forbidden during tests. Use fixtures or opt-in overrides. ${RESPONSIBLE_AUTOMATION_MESSAGE}`;
 
 type GuardEvent = { operation: string; target?: string };
 

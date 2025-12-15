@@ -7,7 +7,7 @@ SmolSoftBoi/puppeteer-stealth is built on the following main stack:
 - [TypeScript](http://www.typescriptlang.org) – Languages
 - [ESLint](http://eslint.org/) – Code Review
 - [GitHub Actions](https://github.com/features/actions) – Continuous Integration
-- [Jest](http://facebook.github.io/jest/) – Javascript Testing Framework
+- [Vitest](https://vitest.dev/) – Javascript Testing Framework
 - [Puppeteer](https://github.com/GoogleChrome/puppeteer) – Headless Browsers
 - [Yarn](https://yarnpkg.com/) – Front End Package Manager
 
@@ -23,7 +23,7 @@ SmolSoftBoi/puppeteer-stealth is built on the following main stack:
 - <img width='25' height='25' src='https://img.stackshare.io/service/1612/bynNY5dJ.jpg' alt='TypeScript'/> [TypeScript](http://www.typescriptlang.org) – Languages
 - <img width='25' height='25' src='https://img.stackshare.io/service/3337/Q4L7Jncy.jpg' alt='ESLint'/> [ESLint](http://eslint.org/) – Code Review
 - <img width='25' height='25' src='https://img.stackshare.io/service/11563/actions.png' alt='GitHub Actions'/> [GitHub Actions](https://github.com/features/actions) – Continuous Integration
-- <img width='25' height='25' src='https://img.stackshare.io/service/830/jest.png' alt='Jest'/> [Jest](http://facebook.github.io/jest/) – Javascript Testing Framework
+- <img width='25' height='25' src='https://img.stackshare.io/service/830/jest.png' alt='Vitest'/> [Vitest](https://vitest.dev/) – Javascript Testing Framework
 - <img width='25' height='25' src='https://img.stackshare.io/service/7553/puppeteer.png' alt='Puppeteer'/> [Puppeteer](https://github.com/GoogleChrome/puppeteer) – Headless Browsers
 - <img width='25' height='25' src='https://img.stackshare.io/service/5848/44mC-kJ3.jpg' alt='Yarn'/> [Yarn](https://yarnpkg.com/) – Front End Package Manager
 
@@ -88,11 +88,11 @@ Full tech stack [here](/techstack.md)
 </td>
 
 <td align='center'>
-  <img width='36' height='36' src='https://img.stackshare.io/service/830/jest.png' alt='Jest'>
+  <img width='36' height='36' src='https://img.stackshare.io/service/830/jest.png' alt='Vitest'>
   <br>
-  <sub><a href="http://facebook.github.io/jest/">Jest</a></sub>
+  <sub><a href="https://vitest.dev/">Vitest</a></sub>
   <br>
-  <sub>v29.7.0</sub>
+  <sub>v4.0.15</sub>
 </td>
 
 <td align='center'>
@@ -129,10 +129,10 @@ Full tech stack [here](/techstack.md)
 
 |NAME|VERSION|LAST UPDATED|LAST UPDATED BY|LICENSE|VULNERABILITIES|
 |:------|:------|:------|:------|:------|:------|
-|[@types/jest](https://www.npmjs.com/@types/jest)|v29.5.8|11/16/23|Kristian Matthews-Kennington |MIT|N/A|
+|[@vitest/coverage-v8](https://www.npmjs.com/@vitest/coverage-v8)|v4.0.15|N/A|N/A|MIT|N/A|
 |[@typescript-eslint/eslint-plugin](https://www.npmjs.com/@typescript-eslint/eslint-plugin)|v4.33.0|11/16/23|Kristian Matthews-Kennington |MIT|N/A|
 |[@typescript-eslint/parser](https://www.npmjs.com/@typescript-eslint/parser)|v4.33.0|11/16/23|Kristian Matthews-Kennington |BSD-2-Clause|N/A|
-|[ts-jest](https://www.npmjs.com/ts-jest)|v29.1.1|11/16/23|Kristian Matthews-Kennington |MIT|N/A|
+|[vitest](https://www.npmjs.com/vitest)|v4.0.15|N/A|N/A|MIT|N/A|
 
 <br/>
 <div align='center'>
