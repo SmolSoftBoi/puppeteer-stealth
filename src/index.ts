@@ -152,7 +152,7 @@ const resolvePlugins = (options?: StealthHandlerOptions): StealthPluginHooks[] =
     const knownModules = requestedModules.filter(isKnownModuleName);
 
     return knownModules.map((name) => {
-        const entry = byName.get(name)!;
+        const entry = byName.get(name) as (typeof pluginFactories)[number];
         return wrapPlugin(entry.factory(), entry.name);
     });
 };
