@@ -147,11 +147,12 @@ const resolvePlugins = (options?: StealthHandlerOptions): StealthPluginHooks[] =
         throw new Error(`Unknown stealth module(s): ${unknown.join(", ")}`);
     }
 
-    return requestedModules.map((name) => {
-        const entry = byName.get(name);
-        if (!entry) {
-            throw new Error(`Unknown stealth module: ${name}`);
-        }
+    type StealthModuleName = (typeof pluginFactories)[number]["name"];
+    const isKnownModuleName = (name: string): name is StealthModuleName => byName.has(name);
+    const knownModules = requestedModules.filter(isKnownModuleName);
+
+    return knownModules.map((name) => {
+        const entry = byName.get(name)!;
         return wrapPlugin(entry.factory(), entry.name);
     });
 };
@@ -210,7 +211,7 @@ const normalizeLaunchOptions = (
         args: Array.isArray(options.args) ? [...options.args] : [],
         ignoreDefaultArgs: Array.isArray(options.ignoreDefaultArgs)
             ? [...options.ignoreDefaultArgs]
-            : options.ignoreDefaultArgs ?? [],
+            : options.ignoreDefaultArgs,
     };
 
     if (normalized.headless === undefined) {

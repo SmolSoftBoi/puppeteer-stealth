@@ -2,6 +2,14 @@ import { describe, expect, it, vi } from "vitest";
 import { createLaunchOptions, createTelemetrySink } from "@tests/fixtures/puppeteer";
 
 describe("coverage: plugin name normalization", () => {
+  it("leaves non-prefixed names unchanged", async () => {
+    const { normalizePluginName } = await import("../../src");
+
+    expect(normalizePluginName("custom.plugin", "fallback")).toBe(
+      "custom.plugin"
+    );
+  });
+
   it("falls back to the module key when a plugin reports an empty name", async () => {
     vi.resetModules();
 
