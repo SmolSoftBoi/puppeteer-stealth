@@ -63,13 +63,13 @@ export interface StealthHandlerOptions {
     strictCompliance?: boolean;
 }
 
-type PluginFactory = () => Partial<StealthPluginHooks> & { name?: string };
+export type PluginFactory = () => Partial<StealthPluginHooks> & { name?: string };
 
 const DEFAULT_ARGS = ["--disable-blink-features=AutomationControlled"];
 const DEFAULT_IGNORE_ARGS = ["--enable-automation"];
 const DEFAULT_HEADLESS = "new" as unknown as LaunchConfiguration["headless"];
 
-const pluginFactories: Array<{ name: string; factory: PluginFactory }> = [
+export const pluginFactories = [
     { name: "chrome.app", factory: ChromeAppPlugin },
     { name: "chrome.csi", factory: ChromeCsiPlugin },
     { name: "chrome.loadTimes", factory: ChromeLoadTimesPlugin },
@@ -86,12 +86,12 @@ const pluginFactories: Array<{ name: string; factory: PluginFactory }> = [
     { name: "user-agent-override", factory: UserAgentOverridePlugin },
     { name: "webgl.vendor", factory: WebglVendorPlugin },
     { name: "window.outerdimensions", factory: WindowOuterdimensionsPlugin },
-];
+] as const satisfies ReadonlyArray<{ name: string; factory: PluginFactory }>;
 
 const instantiateDefaultPlugins = (): StealthPluginHooks[] =>
     pluginFactories.map(({ name, factory }) => wrapPlugin(factory(), name));
 
-const normalizePluginName = (name: string, fallbackName: string): string => {
+export const normalizePluginName = (name: string, fallbackName: string): string => {
     if (!name) return fallbackName;
     if (name.startsWith("stealth/evasions/")) {
         return name.slice("stealth/evasions/".length);
@@ -138,14 +138,20 @@ const resolvePlugins = (options?: StealthHandlerOptions): StealthPluginHooks[] =
         return instantiateDefaultPlugins();
     }
 
-    const byName = new Map(pluginFactories.map((entry) => [entry.name, entry] as const));
+    const byName = new Map<string, (typeof pluginFactories)[number]>();
+    for (const entry of pluginFactories) {
+        byName.set(entry.name, entry);
+    }
     const unknown = requestedModules.filter((name) => !byName.has(name));
     if (unknown.length) {
         throw new Error(`Unknown stealth module(s): ${unknown.join(", ")}`);
     }
 
     return requestedModules.map((name) => {
-        const entry = byName.get(name)!;
+        const entry = byName.get(name);
+        if (!entry) {
+            throw new Error(`Unknown stealth module: ${name}`);
+        }
         return wrapPlugin(entry.factory(), entry.name);
     });
 };
@@ -224,18 +230,19 @@ const ensureLaunchGuards = (options: LaunchConfiguration) => {
         }
     }
 
-    const ignoreDefaultArgs = Array.isArray(options.ignoreDefaultArgs)
-        ? options.ignoreDefaultArgs
-        : DEFAULT_IGNORE_ARGS;
+    if (options.ignoreDefaultArgs === undefined) {
+        options.ignoreDefaultArgs = [...DEFAULT_IGNORE_ARGS];
+        return;
+    }
 
-    if (Array.isArray(options.ignoreDefaultArgs)) {
-        for (const arg of DEFAULT_IGNORE_ARGS) {
-            if (!options.ignoreDefaultArgs.includes(arg)) {
-                options.ignoreDefaultArgs.push(arg);
-            }
+    if (!Array.isArray(options.ignoreDefaultArgs)) {
+        return;
+    }
+
+    for (const arg of DEFAULT_IGNORE_ARGS) {
+        if (!options.ignoreDefaultArgs.includes(arg)) {
+            options.ignoreDefaultArgs.push(arg);
         }
-    } else {
-        options.ignoreDefaultArgs = ignoreDefaultArgs;
     }
 };
 

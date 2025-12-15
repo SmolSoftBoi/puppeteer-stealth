@@ -46,7 +46,7 @@ describe("coverage: internal branches", () => {
   it("instantiates default plugins when modules is an empty list", async () => {
     const options = await beforeLaunch(createLaunchOptions({
       args: [],
-      ignoreDefaultArgs: true,
+      ignoreDefaultArgs: undefined,
       headless: undefined,
     }), {
       modules: [],
@@ -55,6 +55,30 @@ describe("coverage: internal branches", () => {
 
     expect(options.args).toContain("--disable-blink-features=AutomationControlled");
     expect(options.ignoreDefaultArgs).toContain("--enable-automation");
+  });
+
+  it("preserves ignoreDefaultArgs boolean values", async () => {
+    const options = await beforeLaunch(
+      createLaunchOptions({ ignoreDefaultArgs: true }),
+      { strictCompliance: false }
+    );
+
+    expect(options.ignoreDefaultArgs).toBe(true);
+  });
+
+  it("preserves ignoreDefaultArgs predicate values", async () => {
+    const predicate = (arg: string) => arg.includes("automation");
+
+    const options = await beforeLaunch(
+      createLaunchOptions({
+        ignoreDefaultArgs: predicate as unknown as NonNullable<
+          ReturnType<typeof createLaunchOptions>["ignoreDefaultArgs"]
+        >,
+      }),
+      { strictCompliance: false }
+    );
+
+    expect(options.ignoreDefaultArgs).toBe(predicate);
   });
 
   it("rebuilds launch args when a plugin clears them", async () => {

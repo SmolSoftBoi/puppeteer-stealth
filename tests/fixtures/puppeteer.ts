@@ -1,42 +1,24 @@
 import { vi } from "vitest";
+import type { Page } from "puppeteer";
 import type {
-  BrowserConnectOptions,
-  BrowserLaunchArgumentOptions,
-  LaunchOptions,
-  Page,
-} from "puppeteer";
+  LaunchConfiguration,
+  RateLimitProfile,
+  StealthTelemetryEvent,
+  TelemetrySink,
+} from "../../src";
 
-export type LaunchConfiguration = LaunchOptions &
-  BrowserLaunchArgumentOptions &
-  BrowserConnectOptions;
-
-export interface RateLimitProfile {
-  site: string;
-  requestsPerMinute: number;
-  burst: number;
-}
-
-export interface TelemetryEvent {
-  hook: string;
-  plugin: string;
-  status: string;
-  details?: Record<string, unknown>;
-  error?: Error;
-}
-
-export interface RecordingTelemetrySink {
-  events: TelemetryEvent[];
-  track: (event: TelemetryEvent) => void;
+export interface RecordingTelemetrySink extends TelemetrySink {
+  events: StealthTelemetryEvent[];
   reset: () => void;
 }
 
 export const createTelemetrySink = (): RecordingTelemetrySink => {
-  const events: TelemetryEvent[] = [];
+  const events: StealthTelemetryEvent[] = [];
   return {
     events,
-    track: vi.fn((event: TelemetryEvent) => {
+    track: vi.fn((event: StealthTelemetryEvent) => {
       events.push(event);
-    }),
+    }) as TelemetrySink["track"],
     reset: () => {
       events.splice(0, events.length);
     },

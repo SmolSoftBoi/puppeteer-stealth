@@ -7,7 +7,7 @@ SmolSoftBoi/puppeteer-stealth is built on the following main stack:
 - [TypeScript](http://www.typescriptlang.org) – Languages
 - [ESLint](http://eslint.org/) – Code Review
 - [GitHub Actions](https://github.com/features/actions) – Continuous Integration
-- [Vitest](https://vitest.dev/) – Javascript Testing Framework
+- [Vitest](https://vitest.dev/) – JavaScript Testing Framework
 - [Puppeteer](https://github.com/GoogleChrome/puppeteer) – Headless Browsers
 - [Yarn](https://yarnpkg.com/) – Front End Package Manager
 
@@ -23,7 +23,7 @@ SmolSoftBoi/puppeteer-stealth is built on the following main stack:
 - <img width='25' height='25' src='https://img.stackshare.io/service/1612/bynNY5dJ.jpg' alt='TypeScript'/> [TypeScript](http://www.typescriptlang.org) – Languages
 - <img width='25' height='25' src='https://img.stackshare.io/service/3337/Q4L7Jncy.jpg' alt='ESLint'/> [ESLint](http://eslint.org/) – Code Review
 - <img width='25' height='25' src='https://img.stackshare.io/service/11563/actions.png' alt='GitHub Actions'/> [GitHub Actions](https://github.com/features/actions) – Continuous Integration
-- <img width='25' height='25' src='https://img.stackshare.io/service/830/jest.png' alt='Vitest'/> [Vitest](https://vitest.dev/) – Javascript Testing Framework
+- <img width='25' height='25' src='https://vitest.dev/logo.svg' alt='Vitest'/> [Vitest](https://vitest.dev/) – JavaScript Testing Framework
 - <img width='25' height='25' src='https://img.stackshare.io/service/7553/puppeteer.png' alt='Puppeteer'/> [Puppeteer](https://github.com/GoogleChrome/puppeteer) – Headless Browsers
 - <img width='25' height='25' src='https://img.stackshare.io/service/5848/44mC-kJ3.jpg' alt='Yarn'/> [Yarn](https://yarnpkg.com/) – Front End Package Manager
 
@@ -88,7 +88,7 @@ Full tech stack [here](/techstack.md)
 </td>
 
 <td align='center'>
-  <img width='36' height='36' src='https://img.stackshare.io/service/830/jest.png' alt='Vitest'>
+  <img width='36' height='36' src='https://vitest.dev/logo.svg' alt='Vitest'>
   <br>
   <sub><a href="https://vitest.dev/">Vitest</a></sub>
   <br>
